@@ -18,7 +18,12 @@ const Assets = require("../models/assests.model");
 
 const QuizJourney = require("../models/quiz.model");
 
+let uninstalledData = require("../../csvjson (2).json");
+
+let actionIndiaUsers = require("../../AIUsers.json");
+
 const moment = require("moment");
+const { updateOne } = require("../models/userStatus.model");
 
 const router = express.Router();
 
@@ -50,6 +55,16 @@ router.get("/", async (req, res) => {
     let id1 = userNotUninstalled;
 
     userNotUninstalled = userNotUninstalled.map((userId) => String(userId));
+
+    // updating userstatus as uninstalled true means
+
+    // uninstalledData.forEach(async (ele) => {
+    //   let id = mongoose.Types.ObjectId(ele._id);
+
+    //   let data = await mongoose
+    //     .model("user")
+    //     .findByIdAndUpdate({ _id: id }, { $set: { uninstall: true } });
+    // });
 
     // set all the data initially to 0;
 
@@ -145,7 +160,7 @@ router.get("/", async (req, res) => {
 
     //3.Update Total Workshhet attempted and completed data in userstatus
 
-    // journey.forEach(async (ele) => {
+    // TotalWSJourney.forEach(async (ele) => {
     //   let newId = mongoose.Types.ObjectId(ele._id);
     //   let updateAttemptedWSdata = await mongoose
     //     .model("userstatus")
@@ -205,7 +220,7 @@ router.get("/", async (req, res) => {
     //   return SubjectsJourney;
     // }
 
-    // //6. update attempted and completed status in userstatus for each subjects of user
+    // // //6. update attempted and completed status in userstatus for each subjects of user
     // subjects.forEach(async (ele) => {
     //   switch (ele) {
     //     case "Math":
@@ -228,29 +243,30 @@ router.get("/", async (req, res) => {
     //             }
     //           );
     //       });
-    //    break;
-    //     case "English": {
-    //       let value = await subjectWiseUpdate(ele);
-    //       // console.log(ele, value);
-    //       value.forEach(async (ele) => {
-    //         let newId = mongoose.Types.ObjectId(ele._id);
-    //         let updateAttemptedWSdata = await mongoose
-    //           .model("userstatus")
-    //           .findOneAndUpdate(
-    //             {
-    //               _id: newId,
-    //             },
-
-    //             {
-    //               $set: {
-    //                 totalEnglishWorksheetsAttempted: ele.attempted,
-    //                 totalEnglishWorksheetsCompleted: ele.completed,
+    //       break;
+    //     case "English":
+    //       {
+    //         let value = await subjectWiseUpdate(ele);
+    //         // console.log(ele, value);
+    //         value.forEach(async (ele) => {
+    //           let newId = mongoose.Types.ObjectId(ele._id);
+    //           let updateAttemptedWSdata = await mongoose
+    //             .model("userstatus")
+    //             .findOneAndUpdate(
+    //               {
+    //                 _id: newId,
     //               },
-    //             }
-    //           );
-    //       });
-    //     }
-    //     break;
+
+    //               {
+    //                 $set: {
+    //                   totalEnglishWorksheetsAttempted: ele.attempted,
+    //                   totalEnglishWorksheetsCompleted: ele.completed,
+    //                 },
+    //               }
+    //             );
+    //         });
+    //       }
+    //       break;
     //     case "Hindi": {
     //       let value = await subjectWiseUpdate(ele);
     //       console.log(ele, value);
@@ -292,9 +308,9 @@ router.get("/", async (req, res) => {
     //     String(videoId)
     //   );
 
-    //   // console.log(`${video}`, videoJourneyAttempted);
+    // console.log(`${video}`, videoJourneyAttempted);
 
-    //   // //5. Find this Maths,English and Hindi sheets in user and update
+    // //5. Find this Maths,English and Hindi sheets in user and update
 
     //   let videosJourney = await mongoose.model("videostatus").aggregate([
     //     {
@@ -328,70 +344,70 @@ router.get("/", async (req, res) => {
     //     case "Child":
     //       {
     //         let value = await videoWiseUpdate(ele);
-    //         console.log(ele, value);
-    //         value.forEach(async (ele) => {
-    //           let newId = mongoose.Types.ObjectId(ele._id);
-    //           let updateAttemptedWSdata = await mongoose
-    //             .model("userstatus")
-    //             .findOneAndUpdate(
-    //               {
-    //                 _id: newId,
-    //               },
-
-    //               {
-    //                 $set: {
-    //                   totalChildVidStart: ele.attempted,
-    //                   totalChildVidCompleted: ele.completed,
-    //                 },
-    //               }
-    //             );
-    //         });
-    //       }
-    //       break;
-    //     case "Parent":
+    // console.log(ele, value);
+    // value.forEach(async (ele) => {
+    //   let newId = mongoose.Types.ObjectId(ele._id);
+    //   let updateAttemptedWSdata = await mongoose
+    //     .model("userstatus")
+    //     .findOneAndUpdate(
     //       {
-    //         let value = await videoWiseUpdate(ele);
-    //         console.log(ele, value);
-    //         // value.forEach(async (ele) => {
-    //         //   let newId = mongoose.Types.ObjectId(ele._id);
-    //         //   let updateAttemptedWSdata = await mongoose
-    //         //     .model("userstatus")
-    //         //     .findOneAndUpdate(
-    //         //       {
-    //         //         _id: newId,
-    //         //       },
+    //         _id: newId,
+    //       },
 
-    //         //       {
-    //         //         $set: {
-    //         //           totalParentVidStart: ele.attempted,
-    //         //           totalParentVidCompleted: ele.completed,
-    //         //         },
-    //         //       }
-    //         //     );
-    //         // });
-    //       }
-    //       break;
-    //     case "View and do":
     //       {
-    //         let value = await videoWiseUpdate(ele);
-    //         console.log(ele, value);
-    //         // value.forEach(async (ele) => {
-    //         //   let newId = mongoose.Types.ObjectId(ele._id);
-    //         //   let updateAttemptedWSdata = await mongoose
-    //         //     .model("userstatus")
-    //         //     .findOneAndUpdate(
-    //         //       {
-    //         //         _id: newId,
-    //         //       },
+    //         $set: {
+    //           totalChildVidStart: ele.attempted,
+    //           totalChildVidCompleted: ele.completed,
+    //         },
+    //       }
+    //     );
+    // });
+    //   }
+    //   break;
+    // case "Parent":
+    //   {
+    //     let value = await videoWiseUpdate(ele);
+    // console.log(ele, value);
+    // value.forEach(async (ele) => {
+    //   let newId = mongoose.Types.ObjectId(ele._id);
+    //   let updateAttemptedWSdata = await mongoose
+    //     .model("userstatus")
+    //     .findOneAndUpdate(
+    //       {
+    //         _id: newId,
+    //       },
 
-    //         //       {
-    //         //         $set: {
-    //         //           totalViewAndDoVidStart: ele.attempted,
-    //         //           totalViewAndDoVidCompleted: ele.completed,
-    //         //         },
-    //         //       }
-    //         //     );
-    //         // });
+    //       {
+    //         $set: {
+    //           totalParentVidStart: ele.attempted,
+    //           totalParentVidCompleted: ele.completed,
+    //         },
+    //       }
+    //     );
+    // });
+    //   }
+    //   break;
+    // case "View and do":
+    //   {
+    //     let value = await videoWiseUpdate(ele);
+    // console.log(ele, value);
+    // value.forEach(async (ele) => {
+    //   let newId = mongoose.Types.ObjectId(ele._id);
+    //   let updateAttemptedWSdata = await mongoose
+    //     .model("userstatus")
+    //     .findOneAndUpdate(
+    //       {
+    //         _id: newId,
+    //       },
+
+    //       {
+    //         $set: {
+    //           totalViewAndDoVidStart: ele.attempted,
+    //           totalViewAndDoVidCompleted: ele.completed,
+    //         },
+    //       }
+    //     );
+    // });
     //       }
     //       break;
     //     case "":
@@ -428,23 +444,23 @@ router.get("/", async (req, res) => {
 
     //         console.log("videosJourney", videosJourney);
 
-    //         // videosJourney.forEach(async (ele) => {
-    //         //   let newId = mongoose.Types.ObjectId(ele._id);
-    //         //   let updateAttemptedWSdata = await mongoose
-    //         //     .model("userstatus")
-    //         //     .findOneAndUpdate(
-    //         //       {
-    //         //         _id: newId,
-    //         //       },
+    //         videosJourney.forEach(async (ele) => {
+    //           let newId = mongoose.Types.ObjectId(ele._id);
+    //           let updateAttemptedWSdata = await mongoose
+    //             .model("userstatus")
+    //             .findOneAndUpdate(
+    //               {
+    //                 _id: newId,
+    //               },
 
-    //         //       {
-    //         //         $set: {
-    //         //           totalVideosStart: ele.attempted,
-    //         //           totalVideosCompleted: ele.completed,
-    //         //         },
-    //         //       }
-    //         //     );
-    //         // });
+    //               {
+    //                 $set: {
+    //                   totalVideosStart: ele.attempted,
+    //                   totalVideosCompleted: ele.completed,
+    //                 },
+    //               }
+    //             );
+    //         });
     //       }
     //       break;
     //   }
@@ -509,39 +525,144 @@ router.get("/", async (req, res) => {
 
     // by bruteforce method trying to figure out what to do exactly
 
-    let WSData = await mongoose.model("worksheetjourney").find({});
+    // let user = await mongoose
+    //   .model("userstatus")
+    //   .find({})
+    //   .updateMany({
+    //     $set: { totalQuestionWSAttempted: 0, totalQuestionWSCompleted: 0 },
+    //   });
 
-    let userDataAttempted = {};
-    let userDataAttempted1 = {};
+    //lets check by doing update function so that it will not go heap out of memory
 
-    let WSdata = WSData.map((wJourney) => {
-      if (userDataAttempted[wJourney.userId] === undefined) {
-        //   //calculate attempt and add it to userAttempts
-        const attempt = wJourney.journey ? wJourney.journey.length : 0;
-        //   // if attempt then check completion
-        const completion = attempt
-          ? wJourney.journey.reduce((acc, k) => {
-              acc = k.score ? acc++ : acc;
-              return acc;
-            }, 0)
-          : 0;
-        userDataAttempted[wJourney.userId] = attempt || 0;
-        userDataCompleted[wJourney.userId] = completion || 0;
-      } else {
-        const attempt = wJourney.journey ? wJourney.journey.length : 0;
-        // if attempt then check completion
-        const completion = attempt
-          ? wJourney.journey.reduce((acc, k) => {
-              acc = k.score ? acc++ : acc;
-              return acc;
-            }, 0)
-          : 0;
-        userDataAttempted[wJourney.userId] += attempt;
-        userDataCompleted[wJourney.userId] += completion;
+    // async function updateOneAttempted(user, value) {
+    //   return await mongoose
+    //     .model("userstatus")
+    //     .findByIdAndUpdate(
+    //       { _id: user },
+    //       { $set: { totalQuestionWSAttempted: value } }
+    //     );
+    // }
+
+    // async function updateOneCompleted(user, value) {
+    //   return await mongoose
+    //     .model("userstatus")
+    //     .findByIdAndUpdate(
+    //       { _id: user },
+    //       { $set: { totalQuestionWSCompleted: value } }
+    //     );
+    // }
+
+    let WSData = await mongoose.model("worksheetjourney").find({}).count();
+
+    // // let userDataCompleted1 = {};
+    // let userDataAttempted1;
+    // let userDataCompleted1;
+    // let completedCount = [];
+    for (let i = 0; i < WSData; i = i + 10000) {
+      let skip = i; //remaining need to update in 10 thousands or 20000 per iteration
+      let limit = i + 10000;
+
+      console.log("skip", skip, limit);
+      completedCount.push(skip, limit);
+
+      let WSDataOthe = await mongoose
+        .model("worksheetjourney")
+        .find({})
+        .skip(skip)
+        .limit(limit);
+
+      userDataAttempted1 = {};
+      userDataCompleted1 = {};
+
+      // console.log(WSDataOthe);
+
+      WSDataOthe.map((wJourney) => {
+        // console.log(wJourney);
+        if (userDataAttempted1[wJourney.userId] === undefined) {
+          //   //calculate attempt and add it to userAttempts
+          const attempt = wJourney.journey ? wJourney.journey.length : 0;
+          // if attempt then check completion
+          const completion = attempt
+            ? wJourney.journey.reduce((acc, k) => {
+                k.score > 0 ? acc++ : acc;
+                return acc;
+              }, 0)
+            : 0;
+          userDataAttempted1[wJourney.userId] = attempt || 0;
+          userDataCompleted1[wJourney.userId] = completion || 0;
+        } else {
+          const attempt = wJourney.journey ? wJourney.journey.length : 0;
+          // if attempt then check completion
+          const completion = attempt
+            ? wJourney.journey.reduce((acc, k) => {
+                k.score ? acc++ : acc;
+                return acc;
+              }, 0)
+            : 0;
+          userDataAttempted1[wJourney.userId] += attempt;
+          userDataCompleted1[wJourney.userId] += completion;
+        }
+      });
+
+      // console.log(userDataCompleted1);
+
+      // //we need to find that particular user in userstatus and update its values. for attempted and completed
+
+      let userstatusArray = [];
+
+      for (let key in userDataAttempted1) {
+        let user = mongoose.Types.ObjectId(key);
+
+        // let userStatusUser = await mongoose
+        //   .model("userstatus")
+        //   .find({ _id: user });
+        // // console.log(userStatusUser);
+
+        // if (userStatusUser[0]) {
+        //   let value = userStatusUser[0].totalQuestionWSAttempted;
+        //   value = value + userDataAttempted1[key];
+        // console.log(value, userStatusUser[0]._id);
+        // console.log(userStatusUser[0]._id, user);
+
+        let updateQuestionStatus = await mongoose
+          .model("userstatus")
+          .findOneAndUpdate(
+            { _id: user },
+            { $set: { totalQuestionWSAttempted: value } }
+          );
+        console.log(updateQuestionStatus);
+        // }
       }
-    });
 
-    //
+      for (let key in userDataCompleted1) {
+        let user = mongoose.Types.ObjectId(key);
+
+        // console.log(key, user);
+
+        let userStatusUser = await mongoose
+          .model("userstatus")
+          .find({ _id: user });
+        // console.log(userStatusUser);
+
+        if (userStatusUser[0]) {
+          let value = userStatusUser[0].totalQuestionWSCompleted;
+          value = value + userDataCompleted1[key];
+
+          let updateQuestionStatus = await mongoose
+            .model("userstatus")
+            .findOneAndUpdate(
+              { _id: user },
+              { $set: { totalQuestionWSCompleted: value } }
+            );
+          console.log(updateQuestionStatus);
+        }
+      }
+      console.log("true it is updating");
+
+      //console.log("userDataAttempted1", userDataAttempted);
+    }
+
+    // console.log(completedCount);
 
     // let countAttempted;
     // let countCompleted;
@@ -598,6 +719,8 @@ router.get("/", async (req, res) => {
 
     // let today = new Date().toISOString().slice(0, 10);
 
+    // let todaydate = moment(today, "YYYY-MM-DD").format("YYYY-MM-DD:mm:ss[Z]");
+
     // console.log("end of date", today);
 
     // const dateObj = { $gte: startDate };
@@ -606,76 +729,68 @@ router.get("/", async (req, res) => {
 
     // // 1. Video watched
 
-    // let VideoWatched = await mongoose.model("videostatus").aggregate([
-    //   {
-    //     $match: {
-    //       userId: { $in: userNotUninstalled },
-    //       updatedAt: { ...dateObj },
+    // let VideoWatched = await mongoose
+    //   .model("videostatus")
+    //   .find(
+    //     {
+    //       $and: [
+    //         {
+    //           userId: { $in: userNotUninstalled },
+    //           updatedAt: { ...dateObj },
+    //           $or: [{ watched: true }, { watched: false }],
+    //           // watched: true,
+    //         },
+    //       ],
     //     },
-    //   },
-    //   {
-    //     $project: {
-    //       userId: "$userId",
-    //     },
-    //   },
-    // ]);
+    //     { userId: "$userId", _id: 0 }
+    //   )
+    //   .distinct("userId");
 
-    // let VDarray = [];
+    // console.log("VideoWatched", VideoWatched);
 
-    // VideoWatched.forEach((ele) => {
-    //   VDarray.push(ele.userId);
-    // });
-
-    // // console.log(VDCompleted);
     // //2.WS completed
 
-    // let WSCompleted = await mongoose.model("worksheetjourney").aggregate([
-    //   {
-    //     $match: {
-    //       userId: { $in: userNotUninstalled },
-    //       updatedAt: { ...dateObj },
+    // let WSCompleted = await mongoose
+    //   .model("worksheetjourney")
+    //   .find(
+    //     {
+    //       $and: [
+    //         {
+    //           userId: { $in: userNotUninstalled },
+    //           updatedAt: { ...dateObj },
+    //           $or: [{ completed: true }, { completed: false }],
+    //           // completed: true,
+    //         },
+    //       ],
     //     },
-    //   },
+    //     { userId: "$userId", _id: 0 }
+    //   )
+    //   .distinct("userId");
 
-    //   {
-    //     $project: {
-    //       userId: "$userId",
-    //     },
-    //   },
-    // ]);
-
-    // let WSarray = [];
-
-    // WSCompleted.forEach((ele) => {
-    //   WSarray.push(ele.userId);
-    // });
-
-    // // console.log(WSarray);
+    // console.log("VideoWatched", WSCompleted);
 
     // //3.Quiz completed
 
-    // let QZCompleted = await mongoose.model("quizjourney").aggregate([
-    //   {
-    //     $match: {
-    //       userId: { $in: userNotUninstalled },
-    //       updatedAt: { ...dateObj },
-    //       // completed: true,
+    // let QZCompleted = await mongoose
+    //   .model("quizjourney")
+    //   .find(
+    //     {
+    //       $and: [
+    //         {
+    //           userId: { $in: userNotUninstalled },
+    //           updatedAt: { ...dateObj },
+    //           // $or: [{ completed: true }, { completed: false }],
+    //           // completed: true,
+    //         },
+    //       ],
     //     },
-    //   },
-    //   {
-    //     $project: {
-    //       userId: "$userId",
-    //     },
-    //   },
-    // ]);
+    //     { userId: "$userId", _id: 0 }
+    //   )
+    //   .distinct("userId");
 
-    // let QZarray = [];
+    // console.log("QZCompleted", QZCompleted);
 
-    // QZCompleted.forEach((ele) => {
-    //   QZarray.push(ele.userId);
-    // });
-
-    // let data = [...QZarray, ...WSarray, ...VDarray];
+    // let data = [...VideoWatched, ...WSCompleted, ...QZCompleted];
 
     // let dataObj = {};
 
@@ -691,7 +806,356 @@ router.get("/", async (req, res) => {
 
     // check the data for sorting...
 
-    return res.status(200).json({ userDataAttempted1, userDataCompleted1 });
+    // ** Task is to update total score for each subjects monthly assessment score
+
+    // for eg totalScoreMathMnth1 we have to find this
+
+    // finding WS journeys who has unistalled false and assessment {assessmentMonth:{$exists:true}} field in it
+
+    // let sheets = await mongoose
+    //   .model("worksheetjourney")
+    //   .aggregate([
+    //     { $match: { userId: { $in: userNotUninstalled } } },
+    //     { $project: { sheetId: "$sheetId", _id: 0 } },
+    //   ]);
+
+    // console.log(sheets);
+
+    // lets check how we can calculate fucntion to see spread operator
+
+    // let assessmentMonth = "1";
+    // async function calculate(model, filter) {
+    //   console.log(model, filter[0], filter[1].assessmentMonth);
+    // }
+
+    // calculate("student", [
+    //   { user: id1[0] },
+    //   { assessmentMonth: assessmentMonth },
+    // ]);
+
+    // find out the users which are present in maharashtra
+
+    // let arrayZip = [];
+
+    // for (let i = 400000; i <= 445402; i++) {
+    //   arrayZip.push(String(i));
+    // }
+    // //console.log(arrayZip);
+
+    // let users = await mongoose
+    //   .model("user")
+    //   .find({
+    //     zipCode: { $in: arrayZip },
+    //   })
+    //   .sort({ city: -1 });
+
+    // // // console.log(users);
+
+    // let usersMh = [];
+
+    // users.forEach((element) => {
+    //   usersMh.push(element._id.toString());
+    // });
+
+    // // console.log(usersMh);
+
+    // let WSJourneyByMh = await mongoose.model("worksheetjourney").aggregate([
+    //   { $match: { userId: { $in: usersMh } } },
+    //   {
+    //     $group: {
+    //       _id: "$userId",
+    //       attemptCount: { $sum: 1 },
+    //       completionCount: {
+    //         $sum: { $cond: [{ $eq: ["$completed", true] }, 1, 0] },
+    //       },
+    //       // childAge: "$childAge",
+    //       // currentWeek: "$currentWeek",
+    //     },
+    //   },
+    //   {
+    //     $project: {
+    //       WSattempted: "$attemptCount",
+    //       WScompleted: "$completionCount",
+    //     },
+    //   },
+    // ]);
+
+    // let userArray = [];
+
+    // WSJourneyByMh.map((element) => {
+    //   users.map((user) => {
+    //     if (String(user._id) === element._id) {
+    //       // console.log(user);
+    //       userArray.push({
+    //         _id: user._id,
+    //         WSattempted: element.WSattempted,
+    //         WScompleted: element.WScompleted,
+    //         childAge: user.newChildAge,
+    //         currentWeek: user.currentWeek,
+    //       });
+    //     }
+    //   });
+    // });
+
+    // // videos attempt or completed
+
+    // let VSJourney = await mongoose.model("videostatus").aggregate([
+    //   { $match: { userId: { $in: usersMh } } },
+    //   {
+    //     $group: {
+    //       _id: "$userId",
+    //       attemptCount: { $sum: 1 },
+    //       completionCount: {
+    //         $sum: { $cond: [{ $eq: ["$watched", true] }, 1, 0] },
+    //       },
+    //       // childAge: "$childAge",
+    //       // currentWeek: "$currentWeek",
+    //     },
+    //   },
+    //   {
+    //     $project: {
+    //       VDattempted: "$attemptCount",
+    //       VDcompleted: "$completionCount",
+    //     },
+    //   },
+    // ]);
+
+    // // // console.log(VSJourney);
+
+    // let VSArray = [];
+
+    // VSJourney.map((element) => {
+    //   users.map((user) => {
+    //     if (String(user._id) === element._id) {
+    //       // console.log(user);
+    //       VSArray.push({
+    //         _id: user._id,
+    //         VDattempted: element.VDattempted,
+    //         VDcompleted: element.VDcompleted,
+    //         childAge: user.newChildAge,
+    //         currentWeek: user.currentWeek,
+    //       });
+    //     }
+    //   });
+    // });
+
+    // try to making it in one datat
+
+    // let WSplusVDarray = [];
+
+    // userArray.map((ele) => {
+    //   VSArray.map((video) => {
+    //     if (ele._id === video._id) {
+    //       WSplusVDarray.push({
+    //         _id: ele._id,
+    //         WSattempted: ele.WSattempted,
+    //         WScompleted: ele.WScompleted,
+    //         VDattempted: video.VDattempted,
+    //         VDcompleted: video.VDcompleted,
+    //         childAge: ele.childAge,
+    //         currentWeek: ele.currentWeek,
+    //       });
+    //     }
+    //   });
+    // });
+
+    // console.log("WSplusVDarray", WSplusVDarray);
+    // quiz journey
+
+    // let QZJourney = await mongoose.model("quizjourney").aggregate([
+    //   { $match: { userId: { $in: usersMh } } },
+    //   {
+    //     $group: {
+    //       _id: "$userId",
+    //       attemptCount: { $sum: { $size: "$attempts" } },
+    //     },
+    //   },
+    //   {
+    //     $project: {
+    //       TotalQZQuestions: "$attemptCount",
+    //     },
+    //   },
+    // ]);
+
+    // let QZArray = [];
+
+    // QZJourney.map((element) => {
+    //   users.map((user) => {
+    //     if (String(user._id) === element._id) {
+    //       // console.log(user);
+    //       QZArray.push({
+    //         _id: user._id,
+    //         TotalQZQuestions: element.TotalQZQuestions,
+    //         childAge: user.newChildAge,
+    //         currentWeek: user.currentWeek,
+    //       });
+    //     }
+    //   });
+    // });
+
+    // console.log("quiz", QZJourney);
+
+    // adding quiz data to it
+
+    // let WSplusVDplusQZArray = [];
+
+    // WSplusVDarray.map((ele) => {
+    //   QZArray.map((quiz) => {
+    //     if (ele._id === quiz._id) {
+    //       WSplusVDplusQZArray.push({
+    //         _id: ele._id,
+    //         WSattempted: ele.WSattempted,
+    //         WScompleted: ele.WScompleted,
+    //         VDattempted: ele.VDattempted,
+    //         VDcompleted: ele.VDcompleted,
+    //         TotalQZQuestions: quiz.TotalQZQuestions,
+    //         childAge: ele.childAge,
+    //         currentWeek: ele.currentWeek,
+    //       });
+    //     }
+    //   });
+    // });
+
+    // console.log("WSplusVDplusQZArray", WSplusVDplusQZArray);
+    //monthly assessment subject wise
+
+    // let sheetIds = await mongoose
+    //   .model("sheets")
+    //   .find({ assessmentMonth: { $exists: true } });
+
+    // let WSmAssJourney = await mongoose.model("worksheetjourney").find({
+    //   $and: [{ userId: { $in: usersMh } }, { sheetId: { $in: sheetIds } }],
+    // });
+
+    // // console.log("WSmAssJourney", WSmAssJourney);
+
+    // let assessmentArray = [];
+
+    // users.map((ele) => {
+    //   if (ele.currentWeek >= 5 && ele.currentWeek <= 8) {
+    //     assessmentArray.push({
+    //       _id: ele._id,
+    //       assessmentMathsCompleted: 1,
+    //       assessmentEngCompleted: 1,
+    //       assessmentHinCompleted: 1,
+    //     });
+    //   } else if (ele.currentWeek >= 9 && ele.currentWeek <= 12) {
+    //     assessmentArray.push({
+    //       _id: ele._id,
+    //       assessmentMathsCompleted: 2,
+    //       assessmentEngCompleted: 2,
+    //       assessmentHinCompleted: 2,
+    //     });
+    //   } else if (ele.currentWeek >= 13 && ele.currentWeek <= 16) {
+    //     assessmentArray.push({
+    //       _id: ele._id,
+    //       assessmentMathsCompleted: 3,
+    //       assessmentEngCompleted: 3,
+    //       assessmentHinCompleted: 3,
+    //     });
+    //   } else if (ele.currentWeek >= 17 && ele.currentWeek <= 20) {
+    //     assessmentArray.push({
+    //       _id: ele._id,
+    //       assessmentMathsCompleted: 4,
+    //       assessmentEngCompleted: 4,
+    //       assessmentHinCompleted: 4,
+    //     });
+    //   } else if (ele.currentWeek >= 21 && ele.currentWeek <= 24) {
+    //     assessmentArray.push({
+    //       _id: ele._id,
+    //       assessmentMathsCompleted: 5,
+    //       assessmentEngCompleted: 5,
+    //       assessmentHinCompleted: 5,
+    //     });
+    //   } else if (ele.currentWeek >= 25 && ele.currentWeek <= 28) {
+    //     assessmentArray.push({
+    //       _id: ele._id,
+    //       assessmentMathsCompleted: 6,
+    //       assessmentEngCompleted: 6,
+    //       assessmentHinCompleted: 6,
+    //     });
+    //   } else if (ele.currentWeek >= 29 && ele.currentWeek <= 32) {
+    //     assessmentArray.push({
+    //       _id: ele._id,
+    //       assessmentMathsCompleted: 7,
+    //       assessmentEngCompleted: 7,
+    //       assessmentHinCompleted: 7,
+    //     });
+    //   } else if (ele.currentWeek >= 33 && ele.currentWeek <= 36) {
+    //     assessmentArray.push({
+    //       _id: ele._id,
+    //       assessmentMathsCompleted: 8,
+    //       assessmentEngCompleted: 8,
+    //       assessmentHinCompleted: 8,
+    //     });
+    //   } else if (ele.currentWeek >= 37 && ele.currentWeek <= 39) {
+    //     assessmentArray.push({
+    //       _id: ele._id,
+    //       assessmentMathsCompleted: 9,
+    //       assessmentEngCompleted: 9,
+    //       assessmentHinCompleted: 9,
+    //     });
+    //   } else if (ele.currentWeek >= 40 && ele.currentWeek <= 43) {
+    //     assessmentArray.push({
+    //       _id: ele._id,
+    //       assessmentMathsCompleted: 10,
+    //       assessmentEngCompleted: 10,
+    //       assessmentHinCompleted: 10,
+    //     });
+    //   } else if (ele.currentWeek >= 44 && ele.currentWeek <= 47) {
+    //     assessmentArray.push({
+    //       _id: ele._id,
+    //       assessmentMathsCompleted: 11,
+    //       assessmentEngCompleted: 11,
+    //       assessmentHinCompleted: 11,
+    //     });
+    //   } else if (ele.currentWeek >= 48 && ele.currentWeek <= 52) {
+    //     assessmentArray.push({
+    //       _id: ele._id,
+    //       assessmentMathsCompleted: 12,
+    //       assessmentEngCompleted: 12,
+    //       assessmentHinCompleted: 12,
+    //     });
+    //   }
+    // });
+
+    // let WSVDQZASSArray = [];
+
+    // WSplusVDplusQZArray.map((ele) => {
+    //   assessmentArray.map((assessm) => {
+    //     if (ele._id === assessm._id) {
+    //       WSVDQZASSArray.push({
+    //         _id: ele._id,
+    //         WSattempted: ele.WSattempted,
+    //         WScompleted: ele.WScompleted,
+    //         VDattempted: ele.VDattempted,
+    //         VDcompleted: ele.VDcompleted,
+    //         TotalQZQuestions: ele.TotalQZQuestions,
+    //         childAge: ele.childAge,
+    //         currentWeek: ele.currentWeek,
+    //         assessmentMathsCompleted: assessm.assessmentMathsCompleted,
+    //         assessmentEngCompleted: assessm.assessmentEngCompleted,
+    //         assessmentHinCompleted: assessm.assessmentHinCompleted,
+    //       });
+    //     }
+    //   });
+    // });
+
+    // Updating Action India Users with status as AIS or AIJ in the treatment group
+
+    // const users = await mongoose.model("user").find({});
+
+    // actionIndiaUsers.map((actionUser) => {
+    //   // users.map((user) => {
+    //   if (actionUser["फ़ोन नंबर"] == "") {
+
+    //     if()
+
+    //   }
+    //   // });
+    // });
+
+    return res.status(200).json(actionIndiaUsers);
   } catch (e) {
     return res.status(400).json({ message: e.message, status: "Failed" });
   }
