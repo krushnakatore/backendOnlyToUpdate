@@ -618,20 +618,20 @@ router.get("/", async (req, res) => {
         //   .find({ _id: user });
         // // console.log(userStatusUser);
 
-        // if (userStatusUser[0]) {
-        //   let value = userStatusUser[0].totalQuestionWSAttempted;
-        //   value = value + userDataAttempted1[key];
-        // console.log(value, userStatusUser[0]._id);
-        // console.log(userStatusUser[0]._id, user);
+        if (userStatusUser[0]) {
+          let value = userStatusUser[0].totalQuestionWSAttempted;
+          value = value + userDataAttempted1[key];
+          console.log(value, userStatusUser[0]._id);
+          console.log(userStatusUser[0]._id, user);
 
-        let updateQuestionStatus = await mongoose
-          .model("userstatus")
-          .findOneAndUpdate(
-            { _id: user },
-            { $set: { totalQuestionWSAttempted: value } }
-          );
-        console.log(updateQuestionStatus);
-        // }
+          let updateQuestionStatus = await mongoose
+            .model("userstatus")
+            .findOneAndUpdate(
+              { _id: user },
+              { $set: { totalQuestionWSAttempted: value } }
+            );
+          console.log(updateQuestionStatus);
+        }
       }
 
       for (let key in userDataCompleted1) {
